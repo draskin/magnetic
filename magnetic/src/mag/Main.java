@@ -2,40 +2,46 @@ package mag;
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("Hello World");
-		new Main().a(1, 1, -1, 1, -1, 1, -1, 1, 0, 0, 0);
+		Main ob = new Main();
+		double a11 = 0;
+		for (double x = 2; x > 0; x = x - 0.02) {
+			q.x = x;
+			a11 = ob.a(1, 1, b, q);
+			System.out.println("a11(x=" + x + ")=" + a11);
+		}
 		return;
 	}
 
-	public static double a(	int i, int j,
-							double x1, double x2,
-							double y1, double y2,
-							double z1, double z2,
-							double qx, double qy, double qz) {
-		Bounds b = new Bounds(x1, x2, y1, y2, z1, z2);
-		Point q = new Point(qx, qy, qz);
+	public static Bounds b = new Bounds(-1, 1, -1, 1, -1, 1);
+	public static Point q = new Point(0, 0, 0);
+
+	public static double a(int i, int j, Bounds b,Point q) {
 		if (i == 1 && j == 1) {
-			for( int p = 1; p < 3; p++) {
-				for( int k = 1; k < 3; k++) {
-					for( int l = 1; l < 3; l++) {
-						
-					}
+			return (1 / (4 * Math.PI)) * sumPKL(new FuncForSumPKL() {
+				@Override
+				public double func(int p, int k, int l) {
+					return Math.pow(-1, p + k + l + 1)
+							* Math.atan(((b.y(k) - q.y) * (b.z(l) - q.z)) / ((b.x(p) - q.x) * Rpkl(p, k, l, b, q)));
 				}
-			}
-			double result = (1/(4*Math.PI));
+			});
+
 		}
 		return 0;
 	}
 
-	private interface FuncForSum {
+	private static double Rpkl(int p, int k, int l, Bounds b, Point q) {
+		return Math.sqrt(Math.pow(b.x(p) - q.x, 2) + Math.pow(b.y(k) - q.y, 2) + Math.pow(b.z(l) - q.z, 2));
+	}
+
+	private interface FuncForSumPKL {
 		public double func(int p, int k, int l);
 	}
 
-	public static double sumPKI(FuncForSum func) {
+	public static double sumPKL(FuncForSumPKL func) {
 		double result = 0;
-		for( int p = 1; p < 3; p++) {
-			for( int k = 1; k < 3; k++) {
-				for( int l = 1; l < 3; l++) {
+		for (int p = 1; p < 3; p++) {
+			for (int k = 1; k < 3; k++) {
+				for (int l = 1; l < 3; l++) {
 					result = result + func.func(p, k, l);
 				}
 			}
@@ -52,6 +58,7 @@ public class Main {
 			this.z1 = z1;
 			this.z2 = z2;
 		}
+
 		private double x1;
 		private double x2;
 		private double y1;
@@ -87,6 +94,7 @@ public class Main {
 			this.y = y;
 			this.z = z;
 		}
+
 		public double x;
 		public double y;
 		public double z;
