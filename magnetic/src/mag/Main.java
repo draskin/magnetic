@@ -4,24 +4,30 @@ public class Main {
 	public static void main(String[] args) {
 		Main ob = new Main();
 		double a11 = 0;
-		for (double x = 2; x > 0; x = x - 0.02) {
-			q.x = x;
-			a11 = ob.a(1, 1, b, q);
-			System.out.println("a11(x=" + x + ")=" + a11);
+		for (double x = 4.05; x > -4.05; x = x - 0.1) {
+			for (double y = 2.05; y > -2.05; y = y - 0.1) {
+				q.x = x;
+				q.y = y;
+				a11 = ob.a(1, 1, b, q);
+				//System.out.println("");
+				System.out.println(x + " " + y + " " + a11);
+			}
 		}
 		return;
 	}
 
-	public static Bounds b = new Bounds(-1, 1, -1, 1, -1, 1);
+	public static Bounds b = new Bounds(-3, 3, -1, 1, -1, 1);
 	public static Point q = new Point(0, 0, 0);
 
-	public static double a(int i, int j, Bounds b,Point q) {
+	public static double a(int i, int j, Bounds b, Point q) {
 		if (i == 1 && j == 1) {
 			return (1 / (4 * Math.PI)) * sumPKL(new FuncForSumPKL() {
 				@Override
 				public double func(int p, int k, int l) {
-					return Math.pow(-1, p + k + l + 1)
+					double result = Math.pow(-1, p + k + l + 1)
 							* Math.atan(((b.y(k) - q.y) * (b.z(l) - q.z)) / ((b.x(p) - q.x) * Rpkl(p, k, l, b, q)));
+					//System.out.print("res(p=" + p + ",k=" + k + ",l=" + l + ")=" + result + ";");
+					return result;
 				}
 			});
 
